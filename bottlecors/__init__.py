@@ -18,14 +18,22 @@ def abort(code=500, text='Unknown Error.'):
     raise bottle.HTTPError(code, text, **d)
 
 
-def wide_open_cors(app, allow_credentials=True):
+def add_cors(app, allow_credentials=True):
     @app.hook('after_request')
     def add_cors_headers():
         origin = bottle.request.headers.get('Origin')
         d = __cors_dict(origin)
         bottle.response.headers.update(d)
 
-    @app.route('/<url:re:.*>', method=['OPTIONS'])
-    def verify_auth(url):
-        return ''
+    def docstring_fn(fn):
+        def newfn():
+            return fn.__doc__
+        return newfn
+
+    new_routes = []
+    for route in app.routes:
+        new_routes.append(route.rule, docstring_fn(route.callback))
+    for r, fn in new_routes:
+        app.route(r, method=['OPTIONS'])(fn)
+
     return app
