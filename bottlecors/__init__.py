@@ -25,14 +25,16 @@ def add_cors(app, allow_credentials=True):
         d = __cors_dict(origin)
         bottle.response.headers.update(d)
 
-    def docstring_fn(fn):
+    def docstring_fn(fn, method):
         def newfn():
-            return fn.__doc__
+            return method + '\n' + fn.__doc__
         return newfn
 
     new_routes = []
     for route in app.routes:
-        new_routes.append(route.rule, docstring_fn(route.callback))
+        if route.method != 'OPTIONS':
+            new_routes.append(route.rule, docstring_fn(route.callback,
+                                                       route.method))
     for r, fn in new_routes:
         app.route(r, method=['OPTIONS'])(fn)
 
