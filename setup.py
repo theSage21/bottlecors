@@ -2,7 +2,7 @@ from setuptools import setup
 
 
 setup(name='bottlecors',
-      version='0.3',
+      version='0.31',
       packages=['bottlecors'],
       install_requires=['bottle'],
       python_requires=">=3.6",

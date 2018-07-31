@@ -33,8 +33,8 @@ def add_cors(app, allow_credentials=True):
     new_routes = []
     for route in app.routes:
         if route.method != 'OPTIONS':
-            new_routes.append(route.rule, docstring_fn(route.callback,
-                                                       route.method))
+            new_routes.append((route.rule, docstring_fn(route.callback,
+                                                        route.method)))
     for r, fn in new_routes:
         app.route(r, method=['OPTIONS'])(fn)
 
