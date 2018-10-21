@@ -27,7 +27,9 @@ def add_cors(app, allow_credentials=True):
 
     def docstring_fn(fn, method):
         def newfn():
-            return method + '\n' + fn.__doc__
+            doc = fn.__doc__
+            doc = 'No docstring' if doc is None else doc
+            return method + '\n' + doc
         return newfn
 
     new_routes = []
